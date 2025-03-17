@@ -1,3 +1,4 @@
+import 'package:expense_tracker/components/expense_summary.dart';
 import 'package:expense_tracker/components/expense_tile.dart';
 import 'package:expense_tracker/data/expense_data.dart';
 import 'package:expense_tracker/models/expense_item.dart';
@@ -14,7 +15,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // text controllers
   final newExpenseNameController = TextEditingController();
-  final newExpenseAmountController = TextEditingController();
+  final newExpenseDollarController = TextEditingController();
+  final newExpenseCentsController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    //prepare data on startup
+    Provider.of<ExpenseData>(context, listen: false).prepareData();
 
 
 
@@ -30,12 +39,35 @@ class _HomePageState extends State<HomePage> {
             //expense name
             TextField(
               controller: newExpenseNameController,
+              decoration: const InputDecoration(
+                hintText: 'Expense name',
+              ),
             ),
 
             //expense amount
-            TextField(
-              controller: newExpenseAmountController,
+           Row(children: [
+            // dollars
+            Expanded(
+              child: TextField(
+                controller: newExpenseDollarController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                hintText: 'Dollars',
+              ),
+              ),
             ),
+
+            // cents
+            Expanded(
+              child: TextField(
+                controller: newExpenseCentsController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                hintText: 'Cents',
+              ),
+              ),
+            ),
+           ],)
           ],
         ),
         actions: [
@@ -58,10 +90,14 @@ class _HomePageState extends State<HomePage> {
 
   // save
   void save() {
+    //put dollars and cents together
+    String amount = '${newExpenseDollarController.text}.${newExpenseCentsController.text}';
+
+
     // create expense item
     ExpenseItem newExpense = ExpenseItem(
       name: newExpenseNameController.text, 
-      amount: newExpenseAmountController.text, 
+      amount: amount, 
       dateTime: DateTime.now(),
     );
     // add the new list
@@ -81,7 +117,8 @@ class _HomePageState extends State<HomePage> {
   // clear controllers
   void clear() {
     newExpenseNameController.clear();
-    newExpenseAmountController.clear();
+    newExpenseDollarController.clear();
+    newExpenseCentsController.clear();
   }
 
   @override
@@ -91,16 +128,28 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.grey[300],
         floatingActionButton: FloatingActionButton(
           onPressed: addNewExpense,
-          child: Icon(Icons.add),
+          backgroundColor: Colors.black,
+          child: const Icon(Icons.add),
         ),
-        body: ListView.builder(
-          itemCount: value.getAllExpenseList().length,
-          itemBuilder: (context,index) => ExpenseTile(
-            name: value.getAllExpenseList()[index].name, 
-            amount: value.getAllExpenseList()[index].amount, 
-            dateTime: value.getAllExpenseList()[index].dateTime,
+        body: ListView(children: [
+
+          // weekly summary
+          ExpenseSummary(startOfWeek: value.startOfWeekDate()),
+
+          const SizedBox(height: 20),
+
+          //expense list
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: value.getAllExpenseList().length,
+            itemBuilder: (context, index) => ExpenseTile(
+              name: value.getAllExpenseList() [index].name, 
+              amount: value.getAllExpenseList() [index].amount, 
+              dateTime: value.getAllExpenseList() [index].dateTime,
+            ),
           ),
-        ),
+        ]),  
       ),
     );
 
