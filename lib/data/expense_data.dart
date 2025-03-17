@@ -3,6 +3,8 @@ import 'package:expense_tracker/datetime/date_time_helper.dart';
 import 'package:expense_tracker/models/expense_item.dart';
 import 'package:flutter/material.dart';
 
+import 'dart:math';
+
 class ExpenseData extends ChangeNotifier{
 
   //list of All expenses
@@ -79,35 +81,8 @@ class ExpenseData extends ChangeNotifier{
 
   /*
   convert overall list of expenses into a daily expense summary
-
-  e.g.
-
-  overallExpenseList = [
-
-  [ food, 2023/01/30, $10 ],
-  [ hat, 2023/01/30, $15 ],
-  [ drinks, 2023/01/31, $1 ],
-  [ food, 2023/02/01, $5 ],
-  [ food, 2023/02/01, $6 ],
-  [ food, 2023/02/03, $7 ],
-  [ food, 2023/02/05, $10 ],
-  [ food, 2023/02/05, $11 ],
-
-  ]
-
-  ->
-
-  dailyExpenseSummary = 
-  
-  [
-  [20230130: $25],
-  [20230131: $1],
-  [20230201: $11],
-  [20230203: $7],
-  [20230205: $21],
-  ]
-
   */
+
   Map<String, double> calculateDailyExpenseSummary() {
     Map<String, double> dailyExpenseSummary = {
       //date (yyyymmdd) : total expense for that day
