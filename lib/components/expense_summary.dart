@@ -42,9 +42,9 @@ class ExpenseSummary extends StatelessWidget {
     return max == 0 ? 100 : max;
   }
 
-    // calcu;ate the week total
-    String calculateWeekTotal( 
-      ExpenseData value,
+  // calcu;ate the week total
+  String calculateWeekTotal( 
+    ExpenseData value,
       String sunday,
       String monday,
       String tuesday,
@@ -63,7 +63,7 @@ class ExpenseSummary extends StatelessWidget {
         value.calculateDailyExpenseSummary()[saturday] ?? 0,
       ];
       double total = 0;
-      for (var i = 0; i < values.length; i++) {
+      for (int i = 0; i < values.length; i++) {
         total += values[i];
       }
 
@@ -100,11 +100,14 @@ class ExpenseSummary extends StatelessWidget {
               children: [
                 const Text(
                   'Week Total: ',
-                  style: TextStyle(fontWeight: FontWeight.bold),),
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   Text('\$${calculateWeekTotal(value, sunday, monday, tuesday, wednesday, thursday, friday, saturday)}'),
                 ],
             ),
-          )
+          ),
+
+          // bar graph
           SizedBox(
             height: 200,
             child: MyBarGraph(

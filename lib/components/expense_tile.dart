@@ -32,7 +32,7 @@ class ExpenseTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
           ),
 
-          
+           
         ],
       ),
       child: ListTile(
